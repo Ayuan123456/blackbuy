@@ -109,42 +109,11 @@
           <!--幻灯片-->
           <div class="left-705">
             <div class="banner-img">
-              <div id="focus-box" class="focus-box">
-                <ul class="slides">
-                  <li
-                    class
-                    style="width: 100%;height:100%; float: left; margin-right: -100%; position: relative; opacity: 0; display: block; z-index: 1;"
-                  >
-                    <a href="/goods.html">
-                      <img
-                        style="width: 100%;height:100%;"
-                        src="http://39.108.135.214:8899/imgs/SJ4EgwosX0wTqvyAvhtFGT1w.jpg"
-                        draggable="false"
-                      >
-                    </a>
-                  </li>
-                  <li
-                    style="width: 100%;height:100%; float: left; margin-right: -100%; position: relative; opacity: 1; display: block; z-index: 2;"
-                    class="flex-active-slide"
-                  >
-                    <a href="/goods.html">
-                      <img
-                        style="width: 100%;height:100%;"
-                        src="http://39.108.135.214:8899/upload/201504/20/thumb_201504200314272543.jpg"
-                        draggable="false"
-                      >
-                    </a>
-                  </li>
-                </ul>
-                <ol class="flex-control-nav flex-control-paging">
-                  <li>
-                    <a class>1</a>
-                  </li>
-                  <li>
-                    <a class="flex-active">2</a>
-                  </li>
-                </ol>
-              </div>
+              <el-carousel height="150px">
+                <el-carousel-item v-for="(item , index) in sliderlist" :key="index">
+                  <img :src="item.img_url" alt="">
+                </el-carousel-item>
+              </el-carousel>
             </div>
           </div>
           <!--/幻灯片-->
@@ -157,7 +126,7 @@
                 </div>
                 <div class="txt-box">
                   <a href="/goods/show-98.html">{{items.title}}</a>
-                  <span>{{items.add_time | fromtime }}</span>
+                  <span>{{items.add_time | golbletime('YYYY年MM月DD日') }}</span>
                 </div>
               </li>
             </ul>
@@ -169,8 +138,8 @@
       <div class="main-tit">
         <h2>{{items.catetitle}}</h2>
         <p>
-          <a href="/goods/43.html" v-for="it in items.level2catelist" >{{it.subcatetitle}}</a>
-          
+          <a href="/goods/43.html" v-for="it in items.level2catelist">{{it.subcatetitle}}</a>
+
           <a href="/goods/40.html">
             更多
             <i>+</i>
@@ -180,13 +149,10 @@
       <div class="wrapper clearfix">
         <div class="wrap-box">
           <ul class="img-list">
-           
-             <li v-for="et in items.datas">
+            <li v-for="et in items.datas">
               <router-link :to="'/detail/'+et.artID">
                 <div class="img-box">
-                  <img
-                    :src="et.img_url"
-                  >
+                  <img :src="et.img_url">
                 </div>
                 <div class="info">
                   <h3>{{et.artTitle}}</h3>
@@ -203,48 +169,63 @@
                 </div>
               </router-link>
             </li>
-           
           </ul>
         </div>
       </div>
     </div>
-    
   </div>
 </template>
 
 <script>
- import axios from "axios"
- import moment from "moment"
+//  import axios from "axios"
+//  import moment from "moment"
 export default {
-    name:"index",
-    data() {
-        return {
-            catelist:[],
-            sliderlist:[],
-            toplist:[],
-            goodList:[],
-        }
-    },
-    created() {
-        axios.get('http://111.230.232.110:8899/site/goods/gettopdata/goods ').then(res=>{
-            // console.log(res);
-            
-            this.catelist=res.data.message.catelist
-            this.sliderlist=res.data.message.sliderlist
-            this.toplist=res.data.message.toplist
-        }),
-        axios.get("http://111.230.232.110:8899/site/goods/getgoodsgroup").then(res=>{
-            // console.log(res);
-            this.goodList=res.data.message
-        })
-    },
-    filters:{
-        fromtime(value){
-            return moment(value).format('YYYY-MM-DD')
-        }
-    }
+  name: "index",
+  data() {
+    return {
+      catelist: [],
+      sliderlist: [],
+      toplist: [],
+      goodList: [],
+      sliderlist:[],
+    };
+  },
+  created() {
+    this.$axios.get("/site/goods/gettopdata/goods ").then(res => {
+      console.log(res);
+
+      this.catelist = res.data.message.catelist;
+      this.sliderlist = res.data.message.sliderlist;
+      this.toplist = res.data.message.toplist;
+      this.sliderlist=res.data.message.sliderlist 
+    }),
+      this.$axios
+        .get("http://111.230.232.110:8899/site/goods/getgoodsgroup")
+        .then(res => {
+          // console.log(res);
+          this.goodList = res.data.message;
+        });
+  }
 };
 </script>
 
 <style>
+.banner-img{
+  width: 100%;
+  height: 341px;
+}
+
+.banner-img .el-carousel{
+  width: 100%;
+   height: 100%;
+}
+.banner-img .el-carousel .el-carousel__container{
+  width: 100%;
+   height: 100%;
+}
+ .banner-img  .el-carousel .el-carousel__container img {
+   display: block;
+   width: 100%;
+    height: 100%;
+ }
 </style>
